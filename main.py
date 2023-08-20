@@ -26,9 +26,13 @@ def find_arg(arg: str, argv: List[str]):
       return argv[i + 1]
   return None
 
-__prefix_arg = find_arg("p", sys.argv)
-ORIGIN_PREFIX = __prefix_arg if __prefix_arg is not None else ""
+__prefix_arg = find_arg("pfx", sys.argv)
+ORIGIN_PREFIX = __prefix_arg if __prefix_arg is not None else "" # The ICAO code of every flight's origin should start with this value
 CLOSED = False
+__hostname_arg = find_arg("h", sys.argv)
+HOSTNAME = __hostname_arg if __hostname_arg is not None else "0.0.0.0"
+__port_arg = find_arg("p", sys.argv)
+PORT = int(__port_arg) if __port_arg is not None else 80
 
 class OFlight(BaseModel):
   callsign: str
@@ -239,5 +243,5 @@ def tag_get(res: Response, req: Request):
 
 
 if __name__ == "__main__":
-  uvicorn.run(app, host="0.0.0.0", port=80)
+  uvicorn.run(app, host=HOSTNAME, port=PORT)
   CLOSED = True
