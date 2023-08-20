@@ -25,6 +25,7 @@ if not os.path.exists("private"):
 Base = declarative_base()
 last_update_time = round(time.time())
 
+CLOSED = False
 
 class OFlight(BaseModel):
   callsign: str
@@ -109,16 +110,23 @@ class DFlight(Base):
 
 
 def is_flt_valid(flt: DFlight):
-  if (last_update_time - int(str(flt.last_updated)) > 60 * 5) or float(
+  if (last_update_time - int(str(flt.last_updated)) > 30) or float(
     str(flt.distance_to_destination)
   ) < float(str(flt.distance_to_origin)):
+    #  or not str(flt.origin).startswith("LP")
     return False
   else:
     return True
 
 
 def cleaner():
+  passed = 0
   while True:
+    time.sleep(1)
+    if CLOSED: return
+    passed += 1
+    if passed != 10: continue
+    passed = 0
     session = Session()
     flts = session.query(DFlight).all()
     for flt in flts:
@@ -126,7 +134,6 @@ def cleaner():
         session.delete(flt)
     session.commit()
     session.close()
-    time.sleep(10)
 
 
 app = FastAPI()
@@ -153,13 +160,12 @@ def eval_param(param: str):
 
 @app.post("/tag", status_code=200)
 def home_post(res: Response, req: Request, body: List[OFlight]):
+  global last_update_time
   session = Session()
   last_update_time = round(time.time())
   for flight in body:
     try:
       _flt = session.query(DFlight).filter_by(callsign=flight.callsign).first()
-      if not flight.origin.startswith("LP"):
-        continue
       _flt_ = {
         "callsign": flight.callsign,
         "origin": flight.origin,
@@ -232,3 +238,4 @@ def tag_get(res: Response, req: Request):
 
 if __name__ == "__main__":
   uvicorn.run(app, host="0.0.0.0", port=80)
+  CLOSED = True
