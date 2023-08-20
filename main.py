@@ -1,9 +1,6 @@
-import secrets
-import threading
-import time
+import uvicorn, os, sys, json, time, threading, secrets
 from fastapi import FastAPI, Response, status, Header, Request
 from pydantic import BaseModel
-import uvicorn
 from typing import List
 from sqlalchemy import (
   MetaData,
@@ -17,14 +14,20 @@ from sqlalchemy import (
   Float,
 )
 from sqlalchemy.orm import sessionmaker, declarative_base
-import os
-import json
 
 if not os.path.exists("private"):
   os.mkdir("private")
 Base = declarative_base()
 last_update_time = round(time.time())
 
+def find_arg(arg: str, argv: List[str]):
+  for i, _arg in enumerate(argv):
+    if (_arg == f"-{arg}" or _arg == f"--{arg}") and (i + 1) < len(argv):
+      return argv[i + 1]
+  return None
+
+__prefix_arg = find_arg("p", sys.argv)
+ORIGIN_PREFIX = __prefix_arg if __prefix_arg is not None else ""
 CLOSED = False
 
 class OFlight(BaseModel):
@@ -112,8 +115,7 @@ class DFlight(Base):
 def is_flt_valid(flt: DFlight):
   if (last_update_time - int(str(flt.last_updated)) > 30) or float(
     str(flt.distance_to_destination)
-  ) < float(str(flt.distance_to_origin)):
-    #  or not str(flt.origin).startswith("LP")
+  ) < float(str(flt.distance_to_origin)) or not str(flt.origin).startswith(ORIGIN_PREFIX):
     return False
   else:
     return True
