@@ -1,9 +1,6 @@
-import secrets
-import threading
-import time
+import uvicorn, os, sys, json, time, threading, secrets
 from fastapi import FastAPI, Response, status, Header, Request
 from pydantic import BaseModel
-import uvicorn
 from typing import List
 from sqlalchemy import (
   MetaData,
@@ -17,14 +14,25 @@ from sqlalchemy import (
   Float,
 )
 from sqlalchemy.orm import sessionmaker, declarative_base
-import os
-import json
 
 if not os.path.exists("private"):
   os.mkdir("private")
 Base = declarative_base()
 last_update_time = round(time.time())
 
+def find_arg(arg: str, argv: List[str]):
+  for i, _arg in enumerate(argv):
+    if (_arg == f"--{arg}") and (i + 1) < len(argv):
+      return argv[i + 1]
+  return None
+
+__prefix_arg = find_arg("pfx", sys.argv)
+ORIGIN_PREFIX = __prefix_arg if __prefix_arg is not None else "" # The ICAO code of every flight's origin should start with this value
+CLOSED = False
+__hostname_arg = find_arg("h", sys.argv)
+HOSTNAME = __hostname_arg if __hostname_arg is not None else "0.0.0.0"
+__port_arg = find_arg("p", sys.argv)
+PORT = int(__port_arg) if __port_arg is not None else 80
 
 class OFlight(BaseModel):
   callsign: str
@@ -109,16 +117,22 @@ class DFlight(Base):
 
 
 def is_flt_valid(flt: DFlight):
-  if (last_update_time - int(str(flt.last_updated)) > 60 * 5) or float(
+  if (last_update_time - int(str(flt.last_updated)) > 30) or float(
     str(flt.distance_to_destination)
-  ) < float(str(flt.distance_to_origin)):
+  ) < float(str(flt.distance_to_origin)) or not str(flt.origin).startswith(ORIGIN_PREFIX):
     return False
   else:
     return True
 
 
 def cleaner():
+  passed = 0
   while True:
+    time.sleep(1)
+    if CLOSED: return
+    passed += 1
+    if passed != 10: continue
+    passed = 0
     session = Session()
     flts = session.query(DFlight).all()
     for flt in flts:
@@ -126,7 +140,6 @@ def cleaner():
         session.delete(flt)
     session.commit()
     session.close()
-    time.sleep(10)
 
 
 app = FastAPI()
@@ -153,13 +166,12 @@ def eval_param(param: str):
 
 @app.post("/tag", status_code=200)
 def home_post(res: Response, req: Request, body: List[OFlight]):
+  global last_update_time
   session = Session()
   last_update_time = round(time.time())
   for flight in body:
     try:
       _flt = session.query(DFlight).filter_by(callsign=flight.callsign).first()
-      if not flight.origin.startswith("LP"):
-        continue
       _flt_ = {
         "callsign": flight.callsign,
         "origin": flight.origin,
@@ -231,4 +243,5 @@ def tag_get(res: Response, req: Request):
 
 
 if __name__ == "__main__":
-  uvicorn.run(app, host="0.0.0.0", port=80)
+  uvicorn.run(app, host=HOSTNAME, port=PORT)
+  CLOSED = True
