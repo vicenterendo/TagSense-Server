@@ -22,7 +22,7 @@ last_update_time = round(time.time())
 
 def find_arg(arg: str, argv: List[str]):
   for i, _arg in enumerate(argv):
-    if (_arg == f"-{arg}" or _arg == f"--{arg}") and (i + 1) < len(argv):
+    if (_arg == f"--{arg}") and (i + 1) < len(argv):
       return argv[i + 1]
   return None
 
