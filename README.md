@@ -15,13 +15,14 @@ Download the latest release from the [releases page](https://github.com/vicenter
 
 ---
 
-## 💻 Command-line Arguments
+## 💻 Command-line
 
 These arguments customize the behavior of the server.
 
-- `--port` Sets the port at which the server should listen.
-- `--hostname` Sets the hostname at which the server should listen.
-- `--pfx` Sets the origin airport ICAO code filter for received flights. This filters out any flights whose origin airport's ICAO code doesn't start by the value. <sub>( "**LP**" means only fligths whose origin airport's ICAO code matches **LP**xx will be cached )</sub>
+- `ARG` `--port <port>` Sets the port at which the server should listen.
+- `ARG` `--hostname <addr>` Sets the hostname at which the server should listen.
+- `ARG` `--pfx <prefix>` Sets the origin airport ICAO code filter for received flights. This filters out any flights whose origin airport's ICAO code doesn't start by the value. <sub>( "**LP**" means only fligths whose origin airport's ICAO code matches **LP**xx will be cached )</sub>
+- `SWITCH` `-sqwk` Require received flights to have a valid squawk code.
 
 ---
 

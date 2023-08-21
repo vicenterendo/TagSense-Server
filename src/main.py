@@ -11,6 +11,12 @@ def find_arg(arg: str, argv: List[str]):
       return argv[i + 1]
   return None
 
+def find_switch(switch: str, argv: List[str]) -> bool:
+  for i, _switch in enumerate(argv):
+    if (_switch == f"-{switch}"):
+      return True
+  return False
+
 def run(argv: List[str]):
   __prefix_arg = find_arg("pfx", argv)
   settings.ORIGIN_PREFIX = __prefix_arg if __prefix_arg is not None else "" # The ICAO code of every flight's origin should start with this value
@@ -18,8 +24,11 @@ def run(argv: List[str]):
   settings.HOSTNAME = __hostname_arg if __hostname_arg is not None else "0.0.0.0"
   __port_arg = find_arg("port", argv)
   settings.PORT = int(__port_arg) if __port_arg is not None else 80
+  __database_arg = find_arg("database", argv)
+  settings.DATABASE_URL = __database_arg if __database_arg is not None else "sqlite:///private/db.db"
+  settings.REQUIRE_SQUAWK = find_switch("sqwk", argv)
+  settings.PORT = int(__port_arg) if __port_arg is not None else 80
   settings.CLOSED = False
-  settings.DATABASE_URL = "sqlite:///private/db.db"
 
   if not os.path.exists("private"):
     os.mkdir("private")

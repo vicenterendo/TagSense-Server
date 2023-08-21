@@ -3,3 +3,4 @@ PORT: int
 ORIGIN_PREFIX: str
 CLOSED: bool
 DATABASE_URL: str
+REQUIRE_SQUAWK: bool
