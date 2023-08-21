@@ -1,5 +1,5 @@
 private/
-.vscode
+.vscode/
 **/__pycache__
 **/__pycache__/**
 Dockerfile
