@@ -5,10 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python: Current File",
+      "name": "Run TagSense-Server",
       "type": "python",
       "request": "launch",
-      "program": "main.py",
+      "program": "run.py",
+      "args": ["--hostname", "127.0.0.1"],
       "console": "integratedTerminal",
       "justMyCode": true
     }
