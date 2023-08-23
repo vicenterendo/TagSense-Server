@@ -15,14 +15,17 @@ Download the latest release from the [releases page](https://github.com/vicenter
 
 ---
 
-## 💻 Command-line
+## 💾 Environment Variables
 
-These arguments customize the behavior of the server.
+Environment variables are used for defining settings. If a `.env` file exists, it's variables will be imported.
 
-- `ARG` `--port <port>` Sets the port at which the server should listen.
-- `ARG` `--hostname <addr>` Sets the hostname at which the server should listen.
-- `ARG` `--pfx <prefix>` Sets the origin airport ICAO code filter for received flights. This filters out any flights whose origin airport's ICAO code doesn't start by the value. <sub>( "**LP**" means only fligths whose origin airport's ICAO code matches **LP**xx will be cached )</sub>
-- `SWITCH` `-sqwk` Require received flights to have a valid squawk code.
+| Name                    | Parsed to         | Description                                                                               |
+| ----------------------- | ----------------- | ----------------------------------------------------------------------------------------- |
+| TAGSENSE_HOSTNAME       | String            | Sets the bind hostname.                                                                   |
+| TAGSENSE_PORT           | Integer           | Sets the bind port.                                                                       |
+| TAGSENSE_DATABASE_URL   | String            | URL for the cache SQL database.                                                           |
+| TAGSENSE_ORIGIN_PREFIX  | String            | This filters out any flights whose origin airport's ICAO code doesn't start by the value. |
+| TAGSENSE_REQUIRE_SQUAWK | Boolean (`0`/`1`) | If enabled, flights without a squawk code will be filtered out.                           |
 
 ---
 

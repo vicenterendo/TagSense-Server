@@ -2,7 +2,7 @@ import time
 from . import models, schemas, globals
 
 def is_flight_age_valid(flight_last_updated: int):
-  return time.time() - flight_last_updated <= 30
+  return time.time() - flight_last_updated <= 60
 
 def is_flight_origin_valid(flight_origin: str):
   return flight_origin.startswith(globals.ORIGIN_PREFIX)

@@ -1,7 +1,8 @@
-import uvicorn, os, sys, time, threading
+import uvicorn, os, sys, time, threading, dotenv
 from . import globals
 from fastapi import FastAPI
 from typing import List
+dotenv.load_dotenv()
 
 def find_arg(arg: str, argv: List[str]):
   for i, _arg in enumerate(argv):
@@ -17,17 +18,18 @@ def find_switch(switch: str, argv: List[str]) -> bool:
 
 def run(argv: List[str]):
   __prefix_arg = find_arg("pfx", argv)
-  globals.ORIGIN_PREFIX = __prefix_arg if __prefix_arg is not None else "" # The ICAO code of every flight's origin should start with this value
-  __hostname_arg = find_arg("hostname", argv)
-  globals.HOSTNAME = __hostname_arg if __hostname_arg is not None else "0.0.0.0"
-  __port_arg = find_arg("port", argv)
-  globals.PORT = int(__port_arg) if __port_arg is not None else 80
-  __database_arg = find_arg("database", argv)
-  globals.DATABASE_URL = __database_arg if __database_arg is not None else "sqlite:///private/db.db"
-  globals.REQUIRE_SQUAWK = find_switch("sqwk", argv)
-  globals.PORT = int(__port_arg) if __port_arg is not None else 80
-  globals.CLOSED = False
-
+  
+  try:
+    globals.ORIGIN_PREFIX = os.getenv("TAGSENSE_ORIGIN_PREFIX", "") # The ICAO code of every flight's origin should start with this value
+    globals.HOSTNAME = os.getenv("TAGSENSE_HOSTNAME", "0.0.0.0")
+    globals.PORT = int(os.getenv("TAGSENSE_PORT", "80"))
+    globals.DATABASE_URL = os.getenv("TAGSENSE_DATABASE_URL", "sqlite:///tagsense.db")
+    globals.REQUIRE_SQUAWK = bool(int(os.getenv("TAGSENSE_REQUIRE_SQUAWK", "0")))
+    globals.CLOSED = False
+  except ValueError:
+    print("ERR: Failed to parse an environment variable. Check if all environment variables can be parsed to meet their function.")
+    return
+  
   if not os.path.exists("private"): os.mkdir("private")
   from src.routers import tag
 
