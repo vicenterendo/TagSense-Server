@@ -1,2 +1,9 @@
 private/
-.vscode/settings.json
+.vscode/
+**/__pycache__
+**/__pycache__/**
+.env
+/Dockerfile
+/docker-compose.yml
+/.dockerignore
+/tagsense.db
