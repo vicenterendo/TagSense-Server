@@ -3,3 +3,6 @@ private/
 **/__pycache__
 **/__pycache__/**
 .env
+Dockerfile
+docker-compose.yml
+.dockerignore
