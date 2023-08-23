@@ -2,4 +2,4 @@ private/
 .vscode/
 **/__pycache__
 **/__pycache__/**
-Dockerfile
+.env

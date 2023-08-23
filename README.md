@@ -2,7 +2,7 @@
 
 TagSense is a service that allows for external processing of aircraft tags in the `VATSIM` network.
 
-**This is the server part of the project. For the plugin, which provides the server with the actual tag data, go to https://github.com/vicenterendo/TagSense**
+**This is the server part of the project. For the plugin, which provides the server with the actual flight data, go to https://github.com/vicenterendo/TagSense**
 
 **If you would like to implement TagSense on your vACC, please contact me through my e-mail address vicente.rendo@gmail.com**
 

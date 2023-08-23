@@ -1,9 +1,7 @@
-from src.store import settings
 import uvicorn, os, sys, time, threading
-from fastapi import FastAPI, Response, Request
-from pydantic import BaseModel
+from . import globals
+from fastapi import FastAPI
 from typing import List
-
 
 def find_arg(arg: str, argv: List[str]):
   for i, _arg in enumerate(argv):
@@ -19,46 +17,51 @@ def find_switch(switch: str, argv: List[str]) -> bool:
 
 def run(argv: List[str]):
   __prefix_arg = find_arg("pfx", argv)
-  settings.ORIGIN_PREFIX = __prefix_arg if __prefix_arg is not None else "" # The ICAO code of every flight's origin should start with this value
+  globals.ORIGIN_PREFIX = __prefix_arg if __prefix_arg is not None else "" # The ICAO code of every flight's origin should start with this value
   __hostname_arg = find_arg("hostname", argv)
-  settings.HOSTNAME = __hostname_arg if __hostname_arg is not None else "0.0.0.0"
+  globals.HOSTNAME = __hostname_arg if __hostname_arg is not None else "0.0.0.0"
   __port_arg = find_arg("port", argv)
-  settings.PORT = int(__port_arg) if __port_arg is not None else 80
+  globals.PORT = int(__port_arg) if __port_arg is not None else 80
   __database_arg = find_arg("database", argv)
-  settings.DATABASE_URL = __database_arg if __database_arg is not None else "sqlite:///private/db.db"
-  settings.REQUIRE_SQUAWK = find_switch("sqwk", argv)
-  settings.PORT = int(__port_arg) if __port_arg is not None else 80
-  settings.CLOSED = False
+  globals.DATABASE_URL = __database_arg if __database_arg is not None else "sqlite:///private/db.db"
+  globals.REQUIRE_SQUAWK = find_switch("sqwk", argv)
+  globals.PORT = int(__port_arg) if __port_arg is not None else 80
+  globals.CLOSED = False
 
-  if not os.path.exists("private"):
-    os.mkdir("private")
+  if not os.path.exists("private"): os.mkdir("private")
+  from src.routers import tag
 
-  from src import funcs
-  from src import database
-  from src.routers import tags
+  from . import models, schemas, database, crud, utils
+
+  models.Base.metadata.create_all(bind=database.engine)
 
   app = FastAPI()
-  app.include_router(tags.router, prefix="")
+  app.include_router(tag.router, prefix="")
 
   @app.on_event("shutdown")
   async def app_shutdown():
-    settings.CLOSED = True
+    globals.CLOSED = True
 
   def cleaner():
-    passed = 0
+    skipped_iterations = 0
     while True:
       time.sleep(1)
-      if settings.CLOSED: return
-      passed += 1
-      if passed != 10: continue
-      passed = 0
-      session = database.Session()
-      flts = session.query(database.DFlight).all()
-      for flt in flts:
-        if not funcs.validate_flt(flt):
-          session.delete(flt)
+      
+      if globals.CLOSED: break
+      skipped_iterations += 1
+      
+      if skipped_iterations != 10: continue
+      skipped_iterations = 0
+      
+      session = database.SessionLocal()
+      flights = crud.get_flights(session)
+      
+      for flight in flights:
+        if not utils.is_flight_valid(flight):
+          session.delete(flight)
+          
       session.commit()
       session.close()
 
   threading.Thread(target=cleaner).start()
-  uvicorn.run(app, host=settings.HOSTNAME, port=settings.PORT, log_level="info")
+  uvicorn.run(app, host=globals.HOSTNAME, port=globals.PORT, log_level="info")
