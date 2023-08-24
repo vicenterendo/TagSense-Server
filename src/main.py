@@ -1,5 +1,4 @@
 import uvicorn, os, sys, time, threading, dotenv, argparse
-import settings
 from fastapi import FastAPI
 from typing import List
 dotenv.load_dotenv()
@@ -17,8 +16,7 @@ def find_switch(switch: str, argv: List[str]) -> bool:
   return False
 
 def run():
-  
-  settings.load()
+  from . import settings
   
   if not os.path.exists("private"): os.mkdir("private")
   from src.routers import tag
