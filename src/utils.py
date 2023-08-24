@@ -1,11 +1,12 @@
 import time
-from . import models, schemas, globals
+from . import models, schemas
+from .settings import settings
 
 def is_flight_age_valid(flight_last_updated: int):
   return time.time() - flight_last_updated <= 60
 
 def is_flight_origin_valid(flight_origin: str):
-  return flight_origin.startswith(globals.ORIGIN_PREFIX)
+  return flight_origin.startswith(settings.origin_prefix)
 
 def is_flight_squawk_valid(flight_squawk: str | None):
   if flight_squawk is not None:
@@ -13,7 +14,7 @@ def is_flight_squawk_valid(flight_squawk: str | None):
     if len(flight_squawk) != 4: return False
     return True
   else: 
-    if globals.REQUIRE_SQUAWK: return False
+    if settings.require_squawk: return False
     return True
 
 def is_flight_valid(flight: schemas.Flight):
