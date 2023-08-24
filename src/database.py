@@ -1,8 +1,7 @@
 
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy import create_engine
-import pymysql.err
-import sqlalchemy.exc
+import pymysql.err, sqlalchemy.exc, time, threading
 from .settings import settings
 
 Base = declarative_base()
@@ -15,5 +14,29 @@ while True:
     break
   except sqlalchemy.exc.OperationalError or pymysql.err.OperationalError:
     print(f"ERR: Failed to connect to DB at \"{settings.database_url}\" failed, retrying...")
+
+def auto_cleaner():
+  from . import crud, utils
+  skipped_iterations = 0
+  while True:
+    time.sleep(1)
+    
+    if settings.closed: break
+    skipped_iterations += 1
+    
+    if skipped_iterations != 10: continue
+    skipped_iterations = 0
+    
+    session = SessionLocal()
+    flights = crud.get_flights(session)
+    
+    for flight in flights:
+      if not utils.is_flight_valid(flight):
+        session.delete(flight)
+        
+    session.commit()
+    session.close()
+
+if settings.auto_clean: threading.Thread(target=auto_cleaner).start()
   
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

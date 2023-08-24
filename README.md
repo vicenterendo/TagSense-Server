@@ -15,17 +15,20 @@ Download the latest release from the [releases page](https://github.com/vicenter
 
 ---
 
-## 💾 Environment Variables
+## 🔧 Settings
 
-Environment variables are used for defining settings. If a `.env` file exists, it's variables will be imported.
+These are the available settings. They can be changed via command line arguments or environment variables.
+Each setting has an environment variable `TAGSENSE_<setting>` and one or more command line arguments.
+If a `.env` file exists, it's variables will be imported.
 
-| Name                    | Parsed to         | Description                                                                               |
-| ----------------------- | ----------------- | ----------------------------------------------------------------------------------------- |
-| TAGSENSE_HOSTNAME       | String            | Sets the bind hostname.                                                                   |
-| TAGSENSE_PORT           | Integer           | Sets the bind port.                                                                       |
-| TAGSENSE_DATABASE_URL   | String            | URL for the cache SQL database.                                                           |
-| TAGSENSE_ORIGIN_PREFIX  | String            | This filters out any flights whose origin airport's ICAO code doesn't start by the value. |
-| TAGSENSE_REQUIRE_SQUAWK | Boolean (`0`/`1`) | If enabled, flights without a squawk code will be filtered out.                           |
+| Name           | Command line                                                | Type    | Description                                                                                                     |
+| -------------- | ----------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------- |
+| HOSTNAME       | `-a <hostname>` `--addr <hostname>` `--hostname <hostname>` | String  | Sets the bind hostname.                                                                                         |
+| PORT           | `-p <port>` `--port <port>`                                 | Integer | Sets the bind port.                                                                                             |
+| DATABASE_URL   | `-db <url>` `--database-url <url>`                          | String  | URL for the cache SQL database.                                                                                 |
+| ORIGIN_PREFIX  | `-prfx <origin_prefix>` `--origin-prefix <origin_prefix>`   | String  | This filters out any flights whose origin airport's ICAO code doesn't start by the value.                       |
+| REQUIRE_SQUAWK | `-sqwk` `--require-squawk`                                  | Boolean | If enabled, flights without a squawk code will be filtered out.                                                 |
+| AUTO_CLEAN     | `-c <max_age>` `--auto-clean <max_age>`                     | Integer | Enables the auto-cleaner feature that delete flights that have not been updated in `max_age` amount of seconds. |
 
 ---
 
