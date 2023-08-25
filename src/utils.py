@@ -1,9 +1,11 @@
 import time
+from typing import Any
 from . import models, schemas
 from .settings import settings
+import requests
 
 def is_flight_age_valid(flight_last_updated: int):
-  return time.time() - flight_last_updated <= settings.auto_clean
+  return time.time() - flight_last_updated <= settings.auto_clean or 30
 
 def is_flight_origin_valid(flight_origin: str):
   return flight_origin.startswith(settings.origin_prefix)
@@ -22,3 +24,6 @@ def is_flight_valid(flight: schemas.Flight):
   if not is_flight_origin_valid(flight.origin): return False
   if not is_flight_squawk_valid(flight.squawk): return False
   return True
+
+def print_error(context: str, e: Exception):
+  print(f"--------- ERROR IN {context} ----------\n{e}")
