@@ -25,7 +25,7 @@ def set_flight(db: Session, flight: schemas.FlightCreate):
   live_flight = live_flights.get_live_flight(callsign=flight.callsign)
   existing_flight = get_flight(db, uid=live_flight.uid) if live_flight else None 
   for attr_name, attr_value in flight:
-    if type(attr_value) != int and not attr_value: setattr(flight, attr_name, None)
+    if type(attr_value) != int and type(attr_value) != float and not attr_value: setattr(flight, attr_name, None)
   if existing_flight:
     existing_flight.last_updated = round(time.time())
     for column_name, value in flight.model_dump().items():
