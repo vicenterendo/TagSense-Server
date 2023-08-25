@@ -4,10 +4,14 @@ from . import models, schemas, utils, live_flights
 import time
 
 def get_flight(db: Session, **kwargs: Any):
-  return db.query(models.Flight).filter_by(**kwargs).first()
+  all_flights = get_flights(db, **kwargs)
+  return all_flights[0] if len(all_flights) > 0 else None
 
-def get_flights(db: Session, **kwargs: Any):
-  return db.query(models.Flight).filter_by(**kwargs).all()
+def get_flights(db: Session, **kwargs: Any) -> list[models.Flight]:
+  valid_flights: list[models.Flight] = []
+  for flight in db.query(models.Flight).filter_by(**kwargs).all():
+    if utils.is_flight_valid(flight): valid_flights.append(flight)
+  return valid_flights
 
 def new_flight(db: Session, flight: schemas.FlightCreate):
   live_flight = live_flights.get_live_flight(callsign=flight.callsign)
