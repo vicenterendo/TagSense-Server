@@ -30,6 +30,7 @@ If a `.env` file exists, it's variables will be imported.
 | REQUIRE_SQUAWK | `-sqwk` `--require-squawk`                                  | Boolean | If enabled, flights without a squawk code will be filtered out.                                   |
 | AUTO_CLEAN     | `-c` `--auto-clean`                                         | Boolean | Enables the auto-cleaner feature that for automatically delete invalid flights from the database. |
 | MAX_AGE        | `-ma <max_age>` `--max-age <max_age>`                       | Integer | Max number of seconds allowed since last update for each flight.                                  |
+| VALIDATE_STORE | `--validate-store`                                          | Boolean | If enabled, all new flights will be validated and are only stored if valid.                       |
 
 ---
 

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import Any
 from . import models, schemas, utils, live_flights
+from .settings import settings
 import time
 
 def get_flight(db: Session, **kwargs: Any):
@@ -17,7 +18,7 @@ def new_flight(db: Session, flight: schemas.FlightCreate):
   live_flight = live_flights.get_live_flight(callsign=flight.callsign)
   if live_flight is None or get_flight(db, uid=live_flight.uid): return None
   db_flight = models.Flight(**flight.model_dump(), uid=live_flight.uid)
-  if not utils.is_flight_valid(db_flight): return None
+  if settings.validate_store and not utils.is_flight_valid(db_flight): return None
   db.add(db_flight)
   db.commit()
   db.refresh(db_flight)

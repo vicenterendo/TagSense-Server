@@ -17,6 +17,7 @@ class Settings(BaseSettings):
   closed: bool = Field(False)
   auto_clean: bool = Field(False)
   max_age: int = Field(0)
+  validate_store: bool = Field(False)
 
 settings: Settings = Settings() # type: ignore
  
@@ -30,6 +31,7 @@ parser.add_argument("-prfx", "--origin-prefix", dest="origin_prefix")
 parser.add_argument("-sqwk", "--require-squawk", action='store_true', dest="require_squawk")
 parser.add_argument("-c", "--auto-clean", dest="auto_clean", action='store_true')
 parser.add_argument("-ma", "--max-age", dest="max_age", metavar="SECONDS")
+parser.add_argument("--validate-store", dest="validate_store", action="store_true")
 
 args = parser.parse_args()
 
@@ -40,6 +42,7 @@ settings.database_url = args.database_url or settings.database_url
 settings.require_squawk = args.require_squawk or settings.require_squawk
 settings.auto_clean = args.auto_clean or settings.auto_clean
 settings.max_age = args.max_age or settings.max_age
+settings.validate_store = args.validate_store or settings.validate_store
 
 missing_setting = False
 for arg, value in settings.__dict__.items():
