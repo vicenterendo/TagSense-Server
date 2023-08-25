@@ -21,14 +21,15 @@ These are the available settings. They can be changed via command line arguments
 Each setting has an environment variable `TAGSENSE_<setting>` and one or more command line arguments.
 If a `.env` file exists, it's variables will be imported.
 
-| Name           | Command line                                                | Type    | Description                                                                                                     |
-| -------------- | ----------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------- |
-| HOSTNAME       | `-a <hostname>` `--addr <hostname>` `--hostname <hostname>` | String  | Sets the bind hostname.                                                                                         |
-| PORT           | `-p <port>` `--port <port>`                                 | Integer | Sets the bind port.                                                                                             |
-| DATABASE_URL   | `-db <url>` `--database-url <url>`                          | String  | URL for the cache SQL database.                                                                                 |
-| ORIGIN_PREFIX  | `-prfx <origin_prefix>` `--origin-prefix <origin_prefix>`   | String  | This filters out any flights whose origin airport's ICAO code doesn't start by the value.                       |
-| REQUIRE_SQUAWK | `-sqwk` `--require-squawk`                                  | Boolean | If enabled, flights without a squawk code will be filtered out.                                                 |
-| AUTO_CLEAN     | `-c <max_age>` `--auto-clean <max_age>`                     | Integer | Enables the auto-cleaner feature that delete flights that have not been updated in `max_age` amount of seconds. |
+| Name           | Command line                                                | Type    | Description                                                                                       |
+| -------------- | ----------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------- |
+| HOSTNAME       | `-a <hostname>` `--addr <hostname>` `--hostname <hostname>` | String  | Sets the bind hostname.                                                                           |
+| PORT           | `-p <port>` `--port <port>`                                 | Integer | Sets the bind port.                                                                               |
+| DATABASE_URL   | `-db <url>` `--database-url <url>`                          | String  | URL for the cache SQL database.                                                                   |
+| ORIGIN_PREFIX  | `-prfx <origin_prefix>` `--origin-prefix <origin_prefix>`   | String  | This filters out any flights whose origin airport's ICAO code doesn't start by the value.         |
+| REQUIRE_SQUAWK | `-sqwk` `--require-squawk`                                  | Boolean | If enabled, flights without a squawk code will be filtered out.                                   |
+| AUTO_CLEAN     | `-c` `--auto-clean`                                         | Boolean | Enables the auto-cleaner feature that for automatically delete invalid flights from the database. |
+| MAX_AGE        | `-ma <max_age>` `--max-age <max_age>`                       | Integer | Max number of seconds allowed since last update for each flight.                                  |
 
 ---
 

@@ -9,8 +9,6 @@ def get_flight(db: Session, **kwargs: Any):
 def get_flights(db: Session, **kwargs: Any):
   return db.query(models.Flight).filter_by(**kwargs).all()
 
-
-
 def new_flight(db: Session, flight: schemas.FlightCreate):
   live_flight = live_flights.get_live_flight(callsign=flight.callsign)
   if live_flight is None or get_flight(db, uid=live_flight.uid): return None
