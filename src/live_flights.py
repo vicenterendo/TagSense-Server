@@ -27,13 +27,14 @@ def __cache_updater():
   skipped_iterations = 59
   while True:
     try:
-      time.sleep(1)
       if settings.closed: break
       skipped_iterations += 1
       
-      if skipped_iterations != 60: continue
+      if skipped_iterations != 60: 
+        time.sleep(1)
+        continue
+      
       skipped_iterations = 0
-    
       cache = __get_live_flights()
       
     except Exception as e:
