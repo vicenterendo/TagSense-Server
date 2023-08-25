@@ -21,7 +21,7 @@ def get_tag(callsign: str, res: Response, req: Request):
   session.close()
   return flights
 
-@router.get("/flight.", response_model=list[schemas.FlightBase])
+@router.get("/flight", response_model=list[schemas.FlightBase])
 def get_all_tags(res: Response, req: Request):
   session = SessionLocal()
   flights = crud.get_flights(session)

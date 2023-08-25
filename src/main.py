@@ -18,14 +18,14 @@ def find_switch(switch: str, argv: List[str]) -> bool:
 
 def run():
   if not os.path.exists("private"): os.mkdir("private")
-  from .routers import tag
+  from .routers import flight
   from . import models
   from . import database
 
   models.Base.metadata.create_all(bind=database.engine)
 
   app = FastAPI()
-  app.include_router(tag.router, prefix="")
+  app.include_router(flight.router, prefix="")
 
   @app.on_event("shutdown")
   async def app_shutdown():
