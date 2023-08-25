@@ -2,8 +2,8 @@ from fastapi import APIRouter
 from fastapi import FastAPI, Response, Request
 from typing import List
 from pydantic import BaseModel
-from ..database import SessionLocal
-from .. import models, schemas, crud, utils
+from ...database import SessionLocal
+from ... import models, schemas, crud, utils
 
 router = APIRouter()
 
