@@ -4,13 +4,14 @@ import time
 
 class Flight(Base):
   __tablename__ = "flights"
-  callsign = Column(String(255), primary_key=True)
+  id = Column(Integer, primary_key=True, autoincrement=True)
+  callsign = Column(String(255))
   origin = Column(String(4))
   distance_to_origin = Column(Float)
   destination = Column(String(4))
   distance_to_destination = Column(Float)
-  tsat = Column(String(255), nullable=True)
-  squawk = Column(String(255), nullable=True)
+  tsat = Column(String(4), nullable=True)
+  squawk = Column(String(4), nullable=True)
   sid = Column(String(255), nullable=True)
   star = Column(String(255), nullable=True)
   status = Column(String(255), nullable=True)

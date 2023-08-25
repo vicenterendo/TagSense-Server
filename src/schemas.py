@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 class FlightBase(BaseModel):
+  id: int
   callsign: str
   origin: str
   distance_to_origin: float
@@ -13,12 +14,12 @@ class FlightBase(BaseModel):
   status: str | None
   pressure_altitude: int
   flight_level: int
+  last_updated: int
   
 class FlightCreate(FlightBase):
   pass
 
 class Flight(FlightBase):
-  last_updated: int
   
   class Config:
     from_attributes = True  # replacement for orm_mode
