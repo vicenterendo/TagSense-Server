@@ -3,6 +3,7 @@ import time
 from typing import Any
 import requests
 from . import schemas, utils
+from .logging import logger
 from .settings import settings
 
 cache: list[schemas.SimawareFlight] = []
@@ -38,6 +39,6 @@ def __cache_updater():
       cache = __get_live_flights()
       
     except Exception as e:
-      utils.print_error("LIVE FLIGHTS CACHE UPDATER", e)
+      logger.error(f"An error occurred whilst updating live flights cache: {str(e)}")
       
 threading.Thread(target=__cache_updater).start()

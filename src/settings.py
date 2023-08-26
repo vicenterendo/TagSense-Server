@@ -19,6 +19,7 @@ class Settings(BaseSettings):
   max_age: int = Field(0)
   validate_store: bool = Field(False)
   db_max_attempts: int = Field(5)
+  ignore_arrived: bool = Field(False)
 
 settings: Settings = Settings() # type: ignore
  
@@ -34,6 +35,7 @@ parser.add_argument("-c", "--auto-clean", dest="auto_clean", action='store_true'
 parser.add_argument("-ma", "--max-age", dest="max_age", metavar="SECONDS", type=int)
 parser.add_argument("--validate-store", dest="validate_store", action="store_true")
 parser.add_argument("--db-max-attempts", dest="db_max_attempts", metavar="ATTEMPTS", type=int)
+parser.add_argument("--ignore-arrived", dest="ignore_arrived", action="store_true")
 
 args = parser.parse_args()
 
@@ -46,6 +48,7 @@ settings.auto_clean = args.auto_clean or settings.auto_clean
 settings.max_age = args.max_age or settings.max_age
 settings.validate_store = args.validate_store or settings.validate_store
 settings.db_max_attempts = args.db_max_attempts or settings.db_max_attempts
+settings.ignore_arrived = args.ignore_arrived or settings.ignore_arrived
 
 missing_setting = False
 for arg, value in settings.__dict__.items():

@@ -26,7 +26,7 @@ def auto_cleaner():
     flights = crud.get_flights(session)
     
     for flight in flights:
-      if not utils.is_flight_valid(flight):
+      if not utils.validate_flight(flight):
         session.delete(flight)
         
     session.commit()
@@ -34,4 +34,4 @@ def auto_cleaner():
 
 if settings.auto_clean: threading.Thread(target=auto_cleaner).start()
   
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, expire_on_commit=False)

@@ -32,6 +32,7 @@ If a `.env` file exists, it's variables will be imported.
 | MAX_AGE         | `-ma <max_age>` `--max-age <max_age>`                       | Integer | Max number of seconds allowed since last update for each flight.                                  |
 | VALIDATE_STORE  | `--validate-store`                                          | Boolean | If enabled, all new flights will be validated and are only stored if valid.                       |
 | DB_MAX_ATTEMPTS | `--db-max-attempts <attempts>`                              | Integer | Defines the max number of attempts to connect to the database.                                    |
+| IGNORE_ARRIVED  | `--ignore-arrived`                                          | Boolean | If enabled, flights that have touched down at their destination will be considered invalid.       |
 
 ---
 
