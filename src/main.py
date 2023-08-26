@@ -1,8 +1,8 @@
 import uvicorn, os, sys, time, threading, dotenv, argparse
 from fastapi import FastAPI
 from typing import List
-import sqlalchemy.exc, pymysql
-from . import settings
+import sqlalchemy.exc, pymysql, cryptography
+from . import settings, logging
 dotenv.load_dotenv()
 
 def find_arg(arg: str, argv: List[str]):
@@ -24,7 +24,7 @@ def run():
   from . import routers
   from . import utils
   
-  print(f"INFO: Connecting to DB at \"{settings.settings.database_url}\"...")
+  logging.logger.info(f"Connecting to DB at \"{settings.settings.database_url}\"...")
   fails = 0
   while True:
     try:
@@ -33,12 +33,14 @@ def run():
     except sqlalchemy.exc.OperationalError or pymysql.err.OperationalError:
       fails += 1
       if fails >= settings.settings.db_max_attempts: 
-        print(f"CRITICAL: Failed to connect to DB. [{fails}/{settings.settings.db_max_attempts}] (max attempts reached)")
+        logging.logger.critical(f"Failed to connect to DB. [{fails}/{settings.settings.db_max_attempts}] (max attempts reached)")
         utils.close(-1)
-      print(f"ERROR: Failed to connect to DB, retrying... [{fails}/{settings.settings.db_max_attempts}]")
+      logging.logger.error(f"Failed to connect to DB, retrying... [{fails}/{settings.settings.db_max_attempts}]")
+      time.sleep(2)
+      
+  logging.logger.info(f"Successfully connected to DB")
   app = FastAPI()
   app.include_router(routers.router, prefix="")
-    
+
   uvicorn.run(app, host=settings.settings.hostname, port=settings.settings.port, log_level="info")
-  
   utils.close()
