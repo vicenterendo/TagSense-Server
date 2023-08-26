@@ -1,8 +1,11 @@
 import time
-from typing import Any
-from . import models, schemas
+from . import schemas
 from .settings import settings
-import requests
+import sys
+
+def close(exit_code: int | None = None):
+  settings.closed = True
+  sys.exit(exit_code)
 
 def is_flight_age_valid(flight_last_updated: int):
   return time.time() - flight_last_updated <= settings.max_age if settings.max_age else True
