@@ -15,6 +15,7 @@ class Flight(Base):
   sid = Column(String(255), nullable=True)
   star = Column(String(255), nullable=True)
   status = Column(String(255), nullable=True)
+  stand = Column(String(255), nullable=True)
   pressure_altitude = Column(Integer)
   flight_level = Column(Integer)
   last_updated = Column(Integer)
@@ -34,6 +35,7 @@ class Flight(Base):
     sid: str | None,
     star: str | None,
     status: str | None,
+    stand: str | None
   ):
     self.uid = uid
     self.callsign = callsign
@@ -48,4 +50,5 @@ class Flight(Base):
     self.status = status
     self.pressure_altitude = pressure_altitude
     self.flight_level = flight_level
+    self.stand = stand
     self.last_updated = round(time.time())

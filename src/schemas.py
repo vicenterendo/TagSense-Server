@@ -32,6 +32,7 @@ class FlightBase(BaseModel):
   status: str | None
   pressure_altitude: int
   flight_level: int
+  stand: str | None
   
 class FlightCreate(FlightBase):
   pass
