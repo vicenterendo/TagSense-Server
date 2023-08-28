@@ -10,8 +10,8 @@ def close(exit_code: int | None = None):
 def validate_flight_age(flight_last_updated: int):
   return time.time() - flight_last_updated <= settings.max_age if settings.max_age else True
 
-def validate_flight_origin(flight_origin: str):
-  return flight_origin.startswith(settings.origin_prefix)
+def validate_flight_airports(flight_origin: str, flight_destination: str):
+  return flight_origin.startswith(settings.airport_prefix) or flight_destination.startswith(settings.airport_prefix)
 
 def validate_flight_squawk(flight_squawk: str | None):
   if flight_squawk is not None:
@@ -28,7 +28,7 @@ def validate_flight_arrival(pressure_altitude: int, distance_to_origin: float, d
 
 def validate_flight(flight: schemas.Flight):
   if not validate_flight_age(flight.last_updated): return False
-  if not validate_flight_origin(flight.origin): return False
+  if not validate_flight_airports(flight.origin, flight.destination): return False
   if not validate_flight_squawk(flight.squawk): return False
   if not validate_flight_arrival(flight.pressure_altitude, flight.distance_to_origin, flight.distance_to_destination): return False
   return True

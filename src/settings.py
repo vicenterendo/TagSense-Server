@@ -11,7 +11,7 @@ class Settings(BaseSettings):
   
   hostname: str = Field("0.0.0.0")
   port: int = Field(80)
-  origin_prefix: str = Field("")
+  airport_prefix: str = Field("")
   database_url: str = Field("sqlite:///tagsense.db")
   require_squawk: bool = Field(False)
   closed: bool = Field(False)
@@ -29,7 +29,7 @@ parser = argparse.ArgumentParser("TagSense Server", epilog="Environment variable
 parser.add_argument("-a", "--addr", "--hostname", dest="hostname", metavar="ADDR")
 parser.add_argument("-p", "--port", dest="port", type=int)
 parser.add_argument("-db", "--database-url", dest="database_url")
-parser.add_argument("-prfx", "--origin-prefix", dest="origin_prefix")
+parser.add_argument("-prfx", "--airport-prefix", dest="airport_prefix")
 parser.add_argument("-sqwk", "--require-squawk", action='store_true', dest="require_squawk")
 parser.add_argument("-c", "--auto-clean", dest="auto_clean", action='store_true')
 parser.add_argument("-ma", "--max-age", dest="max_age", metavar="SECONDS", type=int)
@@ -39,7 +39,7 @@ parser.add_argument("--ignore-arrived", dest="ignore_arrived", action="store_tru
 
 args = parser.parse_args()
 
-settings.origin_prefix = args.origin_prefix or settings.origin_prefix
+settings.airport_prefix = args.airport_prefix or settings.airport_prefix
 settings.hostname = args.hostname or settings.hostname
 settings.port = args.port or settings.port
 settings.database_url = args.database_url or settings.database_url
