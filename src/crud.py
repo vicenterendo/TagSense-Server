@@ -15,8 +15,6 @@ def get_flights(db: Session, valid_only = False, **kwargs: Any) -> list[models.F
   return flights
 
 def new_flight(db: Session, flight: schemas.FlightCreate):
-  if flight.callsign == "EZY48MK":
-    pass
   live_flight = live_flights.get_live_flight(callsign=flight.callsign)
   if live_flight is None: return None
   existing_flight = get_flight(db, uid=live_flight.uid)
