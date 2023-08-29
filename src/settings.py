@@ -20,6 +20,7 @@ class Settings(BaseSettings):
   validate_store: bool = Field(False)
   db_max_attempts: int = Field(5)
   ignore_arrived: bool = Field(False)
+  cors: list[str] = Field([])
 
 settings: Settings = Settings() # type: ignore
  
@@ -36,6 +37,7 @@ parser.add_argument("-ma", "--max-age", dest="max_age", metavar="SECONDS", type=
 parser.add_argument("--validate-store", dest="validate_store", action="store_true")
 parser.add_argument("--db-max-attempts", dest="db_max_attempts", metavar="ATTEMPTS", type=int)
 parser.add_argument("--ignore-arrived", dest="ignore_arrived", action="store_true")
+parser.add_argument('-crs', "--cors", nargs='+', dest="cors")
 
 args = parser.parse_args()
 
@@ -49,11 +51,4 @@ settings.max_age = args.max_age or settings.max_age
 settings.validate_store = args.validate_store or settings.validate_store
 settings.db_max_attempts = args.db_max_attempts or settings.db_max_attempts
 settings.ignore_arrived = args.ignore_arrived or settings.ignore_arrived
-
-missing_setting = False
-for arg, value in settings.__dict__.items():
-  if value is None:
-    print(f"ERR: {arg} must be provided.")
-    missing_setting = True
-
-if missing_setting: exit()
+settings.cors = args.cors or settings.cors

@@ -1,5 +1,6 @@
 import uvicorn, os, sys, time, threading, dotenv, argparse
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import sqlalchemy.exc, pymysql, cryptography
 from . import settings, logging
@@ -40,6 +41,7 @@ def run():
       
   logging.logger.info(f"Successfully connected to DB")
   app = FastAPI()
+  if settings.settings.cors: app.add_middleware(CORSMiddleware, allow_origins=settings.settings.cors, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
   app.include_router(routers.router, prefix="")
 
   uvicorn.run(app, host=settings.settings.hostname, port=settings.settings.port, log_level="info")
