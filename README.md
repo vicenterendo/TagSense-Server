@@ -15,17 +15,25 @@ Download the latest release from the [releases page](https://github.com/vicenter
 
 ---
 
-## 💾 Environment Variables
+## 🔧 Settings
 
-Environment variables are used for defining settings. If a `.env` file exists, it's variables will be imported.
+These are the available settings. They can be changed via command line arguments or environment variables.
+Each setting has an environment variable `TAGSENSE_<setting>` and one or more command line arguments.
+If a `.env` file exists, it's variables will be imported.
 
-| Name                    | Parsed to         | Description                                                                               |
-| ----------------------- | ----------------- | ----------------------------------------------------------------------------------------- |
-| TAGSENSE_HOSTNAME       | String            | Sets the bind hostname.                                                                   |
-| TAGSENSE_PORT           | Integer           | Sets the bind port.                                                                       |
-| TAGSENSE_DATABASE_URL   | String            | URL for the cache SQL database.                                                           |
-| TAGSENSE_ORIGIN_PREFIX  | String            | This filters out any flights whose origin airport's ICAO code doesn't start by the value. |
-| TAGSENSE_REQUIRE_SQUAWK | Boolean (`0`/`1`) | If enabled, flights without a squawk code will be filtered out.                           |
+| Name            | Command line                                                | Type     | Description                                                                                             |
+| --------------- | ----------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------- |
+| HOSTNAME        | `-a <hostname>` `--addr <hostname>` `--hostname <hostname>` | String   | Sets the bind hostname.                                                                                 |
+| PORT            | `-p <port>` `--port <port>`                                 | Integer  | Sets the bind port.                                                                                     |
+| DATABASE_URL    | `-db <url>` `--database-url <url>`                          | String   | URL for the cache SQL database.                                                                         |
+| ORIGIN_PREFIX   | `-prfx <origin_prefix>` `--origin-prefix <origin_prefix>`   | String   | This filters out any flights whose origin or detnation airport's ICAO code doesn't start by that value. |
+| REQUIRE_SQUAWK  | `-sqwk` `--require-squawk`                                  | Boolean  | If enabled, flights without a squawk code will be filtered out.                                         |
+| AUTO_CLEAN      | `-c` `--auto-clean`                                         | Boolean  | Enables the auto-cleaner feature that for automatically delete invalid flights from the database.       |
+| MAX_AGE         | `-ma <max_age>` `--max-age <max_age>`                       | Integer  | Max number of seconds allowed since last update for each flight.                                        |
+| VALIDATE_STORE  | `--validate-store`                                          | Boolean  | If enabled, all new flights will be validated and are only stored if valid.                             |
+| DB_MAX_ATTEMPTS | `--db-max-attempts <attempts>`                              | Integer  | Defines the max number of attempts to connect to the database.                                          |
+| IGNORE_ARRIVED  | `--ignore-arrived`                                          | Boolean  | If enabled, flights that have touched down at their destination will be considered invalid.             |
+| CORS            | `-crs` `--cors`                                             | String[] | Specified addresses will be whitelisted in the cors header sent with all requests                       |
 
 ---
 
