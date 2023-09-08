@@ -16,6 +16,3 @@ def get_logger(logger_name):
     logger.addHandler(get_console_handler())
     logger.propagate = False
     return logger
-
-
-logger = get_logger("TagSense-Server")

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from typing import Any
+from typing import Any, Type
 from . import models, schemas, utils, live_flights
 from .settings import settings
 import time
@@ -13,6 +13,7 @@ def get_flight(db: Session, valid_only=False, **kwargs: Any):
 def get_flights(db: Session, valid_only=False, **kwargs: Any) -> list[models.Flight]:
     flights: list[models.Flight] = []
     for flight in db.query(models.Flight).filter_by(**kwargs).all():
+        flight: models.Flight = flight
         if (valid_only and utils.validate_flight(flight)) or not valid_only:
             flights.append(flight)
     return flights

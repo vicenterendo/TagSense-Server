@@ -3,11 +3,11 @@ import time
 from typing import Any
 import requests
 from . import schemas, utils
-from .logging import logger
+from .logs import get_logger
 from .settings import settings
 
 cache: list[schemas.SimawareFlight] = []
-
+logger = get_logger(__name__)
 
 def get_live_flights() -> list[schemas.SimawareFlight]:
     return cache
