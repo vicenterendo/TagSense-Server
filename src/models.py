@@ -5,7 +5,8 @@ import time
 
 class Flight(Base):
     __tablename__ = "flights"
-    uid = Column(String(255), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
     callsign = Column(String(255))
     origin = Column(String(4))
     distance_to_origin = Column(Float)
@@ -23,7 +24,6 @@ class Flight(Base):
 
     def __init__(
         self,
-        uid: str,
         callsign: str,
         origin: str,
         distance_to_origin: float,
@@ -38,7 +38,6 @@ class Flight(Base):
         status: str | None,
         stand: str | None
     ):
-        self.uid = uid
         self.callsign = callsign
         self.tsat = tsat
         self.origin = origin

@@ -1,5 +1,5 @@
 import time
-from . import schemas, live_flights
+from . import schemas
 from .settings import settings
 import sys
 

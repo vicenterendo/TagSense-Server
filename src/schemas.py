@@ -1,4 +1,10 @@
-from pydantic import BaseModel
+from typing import Optional
+
+from pydantic import BaseModel, Field, root_validator
+from pydantic.functional_validators import field_validator, model_validator
+from pydantic_core.core_schema import FieldValidationInfo
+
+from src.settings import settings
 
 
 class SimawareFlight(BaseModel):
@@ -23,18 +29,27 @@ class SimawareFlight(BaseModel):
 
 class FlightBase(BaseModel):
     callsign: str
-    origin: str
-    distance_to_origin: float
-    destination: str
+    origin: str = Field(min_length=4, max_length=4)
+    distance_to_origin: float = Field(gt=-1)
+    destination: str = Field(min_length=4, max_length=4)
     distance_to_destination: float
-    tsat: str | None
-    squawk: str | None
-    sid: str | None
-    star: str | None
-    status: str | None
+    tsat: Optional[str] = Field(pattern=r"[0-9]{4}")
+    squawk: Optional[str] = Field(pattern=r"[0-7]{4}", max_length=4, min_length=4)
+    sid: Optional[str]
+    star: Optional[str]
+    status: Optional[str]
     pressure_altitude: int
     flight_level: int
-    stand: str | None
+    stand: Optional[str]
+
+    # noinspection PyNestedDecorators
+    @model_validator(mode="after")
+    def validate_prefix(self):
+        if (not self.origin.startswith(settings.airport_prefix) and
+                not self.destination.startswith(settings.airport_prefix)):
+            raise ValueError(f"Either the destination's ICAO code or the origin's " +
+                             f"ICAO code should start with \"{settings.airport_prefix}\"")
+        return self
 
 
 class FlightCreate(FlightBase):
@@ -42,12 +57,10 @@ class FlightCreate(FlightBase):
 
 
 class FlightGet(FlightBase):
-    uid: str
     last_updated: int
 
 
 class Flight(FlightBase):
-    uid: str
     last_updated: int
 
     class Config:
