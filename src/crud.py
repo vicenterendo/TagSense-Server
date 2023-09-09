@@ -1,5 +1,5 @@
 import time
-from typing import Any, Optional, Iterator, List, Type
+from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -12,11 +12,12 @@ def get_flight(db: Session, callsign: str) -> Optional[models.Flight]:
     return db.query(models.Flight).filter_by(callsign=callsign).first()
 
 
-def get_flights(db: Session, active_only: int = settings.max_age) -> list[Type[Flight]]:
-    flights: list[Type[Flight]] = db.query(models.Flight).all()
+def get_flights(db: Session, active_only: int = settings.max_age) -> list[Flight]:
+    flights: list[Flight] = db.query(models.Flight).all()
 
     if active_only:
-        flights = [flight for flight in flights if (time.time() - flight.last_updated) < active_only]
+        flights = [flight for flight in flights if bool(time.time() -
+                   flight.last_updated < active_only)]
     return flights
 
 

@@ -5,10 +5,10 @@ from sqlalchemy.orm import Session
 
 from ...settings import settings
 
-router = APIRouter()
+flights_router = APIRouter()
 
 
-@router.post("/flight")
+@flights_router.post("/flight")
 def post_tag(res: Response, req: Request, body: list[schemas.FlightCreate], db: Session = Depends(dependencies.get_db)):
     flights: list[schemas.Flight] = []
     for flight_schema in body:
@@ -23,13 +23,13 @@ def post_tag(res: Response, req: Request, body: list[schemas.FlightCreate], db: 
     return flights
 
 
-@router.get("/flight/{callsign}", response_model=schemas.FlightGet)
+@flights_router.get("/flight/{callsign}", response_model=schemas.FlightGet)
 def get_tag(callsign: str, res: Response, req: Request, db: Session = Depends(dependencies.get_db)):
     flight = crud.get_flight(db, callsign)
     return flight
 
 
-@router.get("/flight", response_model=list[schemas.FlightGet])
+@flights_router.get("/flight", response_model=list[schemas.FlightGet])
 def get_all_tags(res: Response, req: Request, db: Session = Depends(dependencies.get_db),
                  max_age: int = settings.max_age):
     flights = crud.get_flights(db, active_only=max_age)

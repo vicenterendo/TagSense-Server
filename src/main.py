@@ -1,23 +1,21 @@
-import uvicorn
 import time
+
 import dotenv
+import pymysql
+import sqlalchemy.exc
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List
-import sqlalchemy.exc
-import pymysql
-from src import settings, logs
+
+from src import logs, settings
+from src.routers.main import router
 
 dotenv.load_dotenv()
-
 logger = logs.get_logger(__name__)
 
 
 def run():
-    from . import models
-    from . import database
-    from . import routers
-    from . import utils
+    from . import database, models, routers, utils
 
     logger.info(f"Connecting to DB at \"{settings.settings.database_url}\"...")
     fails = 0
@@ -40,7 +38,7 @@ def run():
     if settings.settings.cors:
         app.add_middleware(CORSMiddleware, allow_origins=settings.settings.cors,
                            allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
-    app.include_router(routers.router, prefix="")
+    app.include_router(router, prefix="")
 
     uvicorn.run(app, host=settings.settings.hostname,
                 port=settings.settings.port, log_level="info")

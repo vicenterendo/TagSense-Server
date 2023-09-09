@@ -39,7 +39,7 @@ settings.database_url = parsed_arguments.database_url if parsed_arguments.databa
 settings.require_squawk = parsed_arguments.require_squawk if parsed_arguments.require_squawk is not None\
     else settings.require_squawk
 settings.auto_clean = parsed_arguments.auto_clean if parsed_arguments.auto_clean is not None else settings.auto_clean
-settings.max_age = parsed_arguments.max_age if parsed_arguments.max_age is not None else settings.max_age
+settings.max_age = parsed_arguments.max_age if parsed_arguments.max_age is not None else settings.max_age  # type: ignore
 settings.validate_store = parsed_arguments.validate_store if parsed_arguments.validate_store is not None\
     else settings.validate_store
 settings.db_max_attempts = parsed_arguments.db_max_attempts if parsed_arguments.db_max_attempts is not None\

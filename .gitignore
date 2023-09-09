@@ -9,3 +9,4 @@ private/
 /docker-compose.yml
 /.dockerignore
 /tagsense.db
+/mypy.ini
