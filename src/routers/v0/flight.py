@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Depends
-from fastapi import Response, Request
-from ... import schemas, crud, dependencies
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlalchemy.orm import Session
 
-from ...settings import settings
+from src import crud, dependencies, schemas
+from src.settings import settings
 
 flights_router = APIRouter()
 
@@ -32,5 +31,13 @@ def get_tag(callsign: str, res: Response, req: Request, db: Session = Depends(de
 @flights_router.get("/flight", response_model=list[schemas.FlightGet])
 def get_all_tags(res: Response, req: Request, db: Session = Depends(dependencies.get_db),
                  max_age: int = settings.max_age):
+    if not max_age >= 0:
+        raise HTTPException(
+            status_code=400, detail=[{
+                "type": "value_error",
+                "loc": ["query", "max_age"],
+                "input": max_age,
+                "msg": "Input should be equal or greater to 0."
+            }], )
     flights = crud.get_flights(db, active_only=max_age)
     return flights
