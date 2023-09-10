@@ -34,7 +34,8 @@ class FlightBase(BaseModel):
     destination: str = Field(min_length=4, max_length=4)
     distance_to_destination: float
     tsat: Optional[str] = Field(pattern=r"[0-9]{4}")
-    squawk: Optional[str] = Field(pattern=r"[0-7]{4}", max_length=4, min_length=4)
+    squawk: Optional[str] = Field(
+        pattern=r"[0-7]{4}", max_length=4, min_length=4)
     sid: Optional[str]
     star: Optional[str]
     status: Optional[str]
@@ -45,8 +46,8 @@ class FlightBase(BaseModel):
     # noinspection PyNestedDecorators
     @model_validator(mode="after")
     def validate_prefix(self):
-        if (not self.origin.startswith(settings.airport_prefix) and
-                not self.destination.startswith(settings.airport_prefix)):
+        if (self.origin and not self.origin.startswith(settings.airport_prefix)
+                and not self.destination.startswith(settings.airport_prefix)):
             raise ValueError(f"Either the destination's ICAO code or the origin's " +
                              f"ICAO code should start with \"{settings.airport_prefix}\"")
         return self
@@ -58,6 +59,12 @@ class FlightCreate(FlightBase):
 
 class FlightGet(FlightBase):
     last_updated: int
+    callsign: Optional[str]
+    origin: Optional[str]
+    distance_to_origin: Optional[float]
+    distance_to_destination: Optional[float]
+    pressure_altitude: Optional[int]
+    flight_level: Optional[int]
 
 
 class Flight(FlightBase):

@@ -21,7 +21,8 @@ class Settings(BaseSettings):
     validate_store: bool = False
     db_max_attempts: int = 5
     ignore_arrived: bool = False
-    cors: list[str] = []
+    cors: list[str] = ["*"]
+    hide_attributes: list[str] = []
 
 
 settings: Settings = Settings()
@@ -44,6 +45,8 @@ settings.validate_store = parsed_arguments.validate_store if parsed_arguments.va
     else settings.validate_store
 settings.db_max_attempts = parsed_arguments.db_max_attempts if parsed_arguments.db_max_attempts is not None\
     else settings.db_max_attempts
-settings.ignore_arrived = parsed_arguments.ignore_arrived if parsed_arguments.ignore_arrived is not None else\
-    settings.ignore_arrived
+settings.ignore_arrived = parsed_arguments.ignore_arrived if parsed_arguments.ignore_arrived is not None\
+    else settings.ignore_arrived
 settings.cors = parsed_arguments.cors if parsed_arguments.cors is not None else settings.cors
+settings.hide_attributes = parsed_arguments.hide_attributes if parsed_arguments.hide_attributes is not None\
+    else settings.hide_attributes

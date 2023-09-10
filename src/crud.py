@@ -4,7 +4,6 @@ from typing import Optional
 from sqlalchemy.orm import Session
 
 from . import models, schemas, utils
-from .models import Flight
 from .settings import settings
 
 
@@ -12,8 +11,14 @@ def get_flight(db: Session, callsign: str) -> Optional[models.Flight]:
     return db.query(models.Flight).filter_by(callsign=callsign).first()
 
 
-def get_flights(db: Session, active_only: int = settings.max_age) -> list[Flight]:
-    flights: list[Flight] = db.query(models.Flight).all()
+def get_flights(db: Session, active_only: int = settings.max_age) -> list[schemas.FlightGet]:
+    flights: list[schemas.FlightGet] = []
+    for flight_model in db.query(models.Flight).all():
+        flight = schemas.FlightGet(**flight_model.__dict__)
+        for attr_name in settings.hide_attributes:
+            if hasattr(flight, attr_name):
+                setattr(flight, attr_name, None)
+        flights.append(flight)
 
     if active_only:
         flights = [flight for flight in flights if bool(time.time() -

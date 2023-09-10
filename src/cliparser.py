@@ -31,6 +31,7 @@ class CLIParser(BaseModel):
     db_max_attempts: Optional[int] = None
     ignore_arrived: Optional[bool] = None
     cors: Optional[list[str]] = None
+    hide_attributes: Optional[list[str]] = None
 
 
 parser.add_argument("-a", "--addr", "--hostname",
@@ -51,6 +52,7 @@ parser.add_argument("--db-max-attempts",
 parser.add_argument("--ignore-arrived",
                     dest="ignore_arrived", action="store_true")
 parser.add_argument('-crs', "--cors", nargs='+', dest="cors")
+parser.add_argument('--hide-attributes', nargs='+', dest="hide_attributes")
 
 args = parser.parse_args()
 
