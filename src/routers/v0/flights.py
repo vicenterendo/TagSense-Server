@@ -7,7 +7,7 @@ from src.settings import settings
 flights_router = APIRouter()
 
 
-@flights_router.post("/flight")
+@flights_router.post("/flights")
 def post_tag(res: Response, req: Request, body: list[schemas.FlightCreate], db: Session = Depends(dependencies.get_db)):
     flights: list[schemas.Flight] = []
     for flight_schema in body:
@@ -28,7 +28,7 @@ def get_tag(callsign: str, res: Response, req: Request, db: Session = Depends(de
     return flight
 
 
-@flights_router.get("/flight", response_model=list[schemas.FlightGet])
+@flights_router.get("/flights", response_model=list[schemas.FlightGet])
 def get_all_tags(res: Response, req: Request, db: Session = Depends(dependencies.get_db),
                  max_age: int = settings.max_age):
     if not max_age >= 0:

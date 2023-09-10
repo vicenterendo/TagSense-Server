@@ -10,3 +10,4 @@ private/
 /.dockerignore
 /tagsense.db
 /mypy.ini
+/.fleet
