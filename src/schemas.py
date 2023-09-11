@@ -28,20 +28,29 @@ class SimawareFlight(BaseModel):
 
 
 class FlightBase(BaseModel):
-    callsign: str
-    origin: str = Field(min_length=4, max_length=4)
-    distance_to_origin: float = Field(gt=-1)
-    destination: str = Field(min_length=4, max_length=4)
-    distance_to_destination: float
-    tsat: Optional[str] = Field(pattern=r"[0-9]{4}")
-    squawk: Optional[str] = Field(
-        pattern=r"[0-7]{4}", max_length=4, min_length=4)
-    sid: Optional[str]
-    star: Optional[str]
-    status: Optional[str]
-    pressure_altitude: int
-    flight_level: int
-    stand: Optional[str]
+    callsign: str = Field(exclude="callsign" in settings.hide_attributes)
+    origin: str = Field(min_length=4, max_length=4,
+                        exclude="origin" in settings.hide_attributes)
+    distance_to_origin: float = Field(
+        gt=-1, exclude="distance_to_origin" in settings.hide_attributes)
+    destination: str = Field(min_length=4, max_length=4,
+                             exclude="destination" in settings.hide_attributes)
+    distance_to_destination: float = Field(
+        exclude="distance_to_destination" in settings.hide_attributes)
+    tsat: Optional[str] = Field(
+        pattern=r"[0-9]{4}", exclude="tsat" in settings.hide_attributes)
+    squawk: Optional[str] = Field(exclude="squawk" in settings.hide_attributes,
+                                  pattern=r"[0-7]{4}", max_length=4, min_length=4)
+    sid: Optional[str] = Field(exclude="sid" in settings.hide_attributes)
+    star: Optional[str] = Field(exclude="star" in settings.hide_attributes)
+    status: Optional[str] = Field(
+        exclude="status" in settings.hide_attributes)
+    pressure_altitude: int = Field(
+        exclude="pressure_altitude" in settings.hide_attributes)
+    flight_level: int = Field(
+        exclude="flight_level" in settings.hide_attributes)
+    stand: Optional[str] = Field(
+        exclude="stand" in settings.hide_attributes)
 
     # noinspection PyNestedDecorators
     @model_validator(mode="after")

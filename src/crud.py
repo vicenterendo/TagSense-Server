@@ -15,9 +15,6 @@ def get_flights(db: Session, active_only: int = settings.max_age) -> list[schema
     flights: list[schemas.FlightGet] = []
     for flight_model in db.query(models.Flight).all():
         flight = schemas.FlightGet(**flight_model.__dict__)
-        for attr_name in settings.hide_attributes:
-            if hasattr(flight, attr_name):
-                setattr(flight, attr_name, None)
         flights.append(flight)
 
     if active_only:
