@@ -33,7 +33,7 @@ def set_flight(db: Session, flight: schemas.FlightCreate):
         db.commit()
         return existing_flight
     else:
-        db_flight = models.Flight(**flight.model_dump())
+        db_flight = models.Flight(**dict(flight))
         if settings.validate_store and not utils.validate_flight(db_flight):
             return None
         db.add(db_flight)
