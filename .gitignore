@@ -1,5 +1,7 @@
 private/
 .vscode/
+/.idea
+/venv
 **/__pycache__
 **/__pycache__/**
 .env
@@ -7,3 +9,5 @@ private/
 /docker-compose.yml
 /.dockerignore
 /tagsense.db
+/mypy.ini
+/.fleet
